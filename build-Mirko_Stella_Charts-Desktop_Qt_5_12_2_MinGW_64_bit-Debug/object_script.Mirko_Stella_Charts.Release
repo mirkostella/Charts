@@ -1,0 +1,16 @@
+release/controller.o
+release/eccezionecaricamento.o
+release/gestorecaricamento.o
+release/listwidgetitem.o
+release/main.o
+release/grafico.o
+release/mainwindow.o
+release/modello.o
+release/tracciatomultiplo.o
+release/tracciatosingolo.o
+release/vistagrafico.o
+release/vistatracciatosingolo.o
+release/moc_controller.o
+release/moc_eccezionecaricamento.o
+release/moc_mainwindow.o
+release/moc_vistagrafico.o

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<radice>
+    <grafico>
+        <tipo>tracciato_singolo</tipo>
+        <nome>sono il primo grafico</nome>
+        <dati>
+            <dato>
+                <chiave>ciao</chiave>
+                <valore>33</valore>
+            </dato>
+            <dato>
+                <chiave>come</chiave>
+                <valore>32</valore>
+            </dato>
+            <dato>
+                <chiave>stai</chiave>
+                <valore>54</valore>
+            </dato>
+        </dati>
+    </grafico>
+</radice>
+
