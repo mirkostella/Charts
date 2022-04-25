@@ -1,6 +1,6 @@
 #include "vistatracciatosingolo.h"
 
-QChart *VistaTracciatoSingolo::creaTorta()
+void VistaTracciatoSingolo::creaTorta()
 {
     QPieSeries *series = new QPieSeries();
        series->append("Jane", 1);
@@ -17,29 +17,28 @@ QChart *VistaTracciatoSingolo::creaTorta()
                chart->addSeries(series);
                chart->setTitle("Simple piechart example");
                chart->legend()->hide();
-
-               return chart;
+               areaGrafico->setChart(chart);
 }
 
-VistaTracciatoSingolo::VistaTracciatoSingolo(Grafico * g):VistaGrafico(g)
+void VistaTracciatoSingolo::inizializzaVociMenuPrincipale()
 {
-    selezioneRappresentazione->addItem("torta");
+    VistaGrafico::inizializzaVociMenuPrincipale();
+    QAction* vediTorta=new QAction("Torta");
+    menuBar()->addAction(vediTorta);
+    connect(vediTorta,SIGNAL(triggered()),this,SLOT(mostraTorta()));
 }
 
-void VistaTracciatoSingolo::cambiaRappresentazione(int selezione)
+VistaTracciatoSingolo::VistaTracciatoSingolo(QWidget* p,Grafico * g):VistaGrafico(p,g)
 {
-    QChart* temp=getChart();
-
-    if(selezione==0){
-        areaGrafico->setChart(creaBarre());
-    }
-    if(selezione==1){
-        areaGrafico->setChart(creaTorta());
-    }
-    if(selezione==2){
-        areaGrafico->setChart(creaSpezzata());
-    }
-    delete temp;
-    areaGrafico->setRenderHint(QPainter::Antialiasing);
+    QMenu* menuPrincipale=getMenuPrincipale();
+    QAction* vediTorta=new QAction("Torta");
+    menuPrincipale->addAction(vediTorta);
 }
+
+void VistaTracciatoSingolo::mostraTorta()
+{
+    creaTorta();
+}
+
+
 

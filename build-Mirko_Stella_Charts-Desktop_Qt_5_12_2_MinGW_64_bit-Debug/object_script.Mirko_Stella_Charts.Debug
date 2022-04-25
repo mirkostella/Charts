@@ -6,9 +6,11 @@ debug/main.o
 debug/grafico.o
 debug/mainwindow.o
 debug/modello.o
+debug/tablewidgetitem.o
+debug/traccia.o
 debug/tracciatomultiplo.o
-debug/tracciatosingolo.o
 debug/vistagrafico.o
+debug/vistamodificagrafico.o
 debug/vistatracciatosingolo.o
 debug/moc_controller.o
 debug/moc_eccezionecaricamento.o

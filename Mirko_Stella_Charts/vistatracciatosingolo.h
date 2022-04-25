@@ -5,11 +5,13 @@
 class VistaTracciatoSingolo:public VistaGrafico
 {
 private:
-    QChart* creaTorta();
+    void creaTorta();
+    //overriding
 public:
-    VistaTracciatoSingolo(Grafico*);
+    VistaTracciatoSingolo(QWidget*,Grafico*);
 public slots:
-    virtual void cambiaRappresentazione(int);
+    void inizializzaVociMenuPrincipale();
+    void mostraTorta();
 
 };
 

@@ -76,9 +76,9 @@ void MainWindow::visualizzaGraficoSelezionato(QListWidgetItem *selezione)
 {
     Grafico* daVisualizzare=static_cast<ListWidgetItem*>(selezione)->getGrafico();
     if(dynamic_cast<TracciatoMultiplo*>(daVisualizzare))
-        graficoDaVisualizzare=new VistaGrafico(daVisualizzare);
-    if(dynamic_cast<TracciatoSingolo*>(daVisualizzare))
-        graficoDaVisualizzare=new VistaTracciatoSingolo(daVisualizzare);
-    graficoDaVisualizzare->exec();
+        graficoDaVisualizzare=new VistaGrafico(this,daVisualizzare);
+//    if(dynamic_cast<TracciatoSingolo*>(daVisualizzare))
+//        graficoDaVisualizzare=new VistaTracciatoSingolo(daVisualizzare);
+    graficoDaVisualizzare->show();
 }
 

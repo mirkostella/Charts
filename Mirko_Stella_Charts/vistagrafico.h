@@ -3,7 +3,6 @@
 
 #include <QDialog>
 #include "tracciatomultiplo.h"
-#include "tracciatosingolo.h"
 #include <QChartView>
 #include <QtCharts/QChart>
 #include <QPushButton>
@@ -16,10 +15,26 @@
 #include <QtCharts/QValueAxis>
 #include <QtCharts/QPieSeries>
 #include <QtCharts/QPieSlice>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QCategoryAxis>
+#include <QScrollArea>
+#include <QMainWindow>
+#include <QMenuBar>
+#include <QAction>
+#include <QGridLayout>
+#include <QTableWidget>
+#include "tablewidgetitem.h"
+#include "vistamodificagrafico.h"
+#include <QInputDialog>
+#include <QVariant>
+
 #include <iostream>
 using std::cout;
+using std::endl;
 
 
+using QtCharts::QCategoryAxis;
+using QtCharts::QLineSeries;
 using QtCharts::QPieSeries;
 using QtCharts::QPieSlice;
 using QtCharts::QValueAxis;
@@ -30,28 +45,40 @@ using QtCharts::QChartView;
 using QtCharts::QChart;
 
 //classe astratta che fornisce una rappresentazione base
-class VistaGrafico:public QDialog
+class VistaGrafico:public QMainWindow
 {
     Q_OBJECT
 private:
     Grafico* grafico;
-    QHBoxLayout* layPrincipale;
-    QVBoxLayout* layGrafico;
-    QVBoxLayout* layModifica;
-    QPushButton* pulsanteModifica;
+    QGridLayout* layPrincipale;
+    QTableWidget* tabella;
+
+    void creaTabella();
+    void creaBarre();
+    void creaSpezzata();
+
 protected:
     QChartView* areaGrafico;
-    QComboBox* selezioneRappresentazione;
-    QChart* creaBarre();
-    QChart* creaSpezzata();
 public:
-    VistaGrafico(Grafico*);
-    void impostaGrafico(QChart*);
+    VistaGrafico(QWidget*,Grafico*);
     Grafico* getGrafico() const;
     QChart* getChart() const;
+    QMenu* getMenuPrincipale() const;
+    QMenu* getMenuModifica() const;
 
+private slots:
+    void aggiornaValore(QTableWidgetItem *);
+    void apriDialogoCella(QTableWidgetItem*);
 public slots:
-    virtual void cambiaRappresentazione(int);
+    void inizializzaVociMenuPrincipale();
+    void inizializzaVociMenuModifica();
+    void mostraBarre();
+    void mostraSpezzata();
+    void mostraModifica();
+    void mostraPrincipale();
+signals:
+    //emesso quando cambia il valore di una cella nella tabella di modifica
+    void valoreTabellaCambiato(Grafico*,const QString&,const QString&,double);
 
 };
 

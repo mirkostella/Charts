@@ -1,27 +1,30 @@
 #ifndef TRACCIATOMULTIPLO_H
 #define TRACCIATOMULTIPLO_H
 
-#include "tracciatosingolo.h"
+#include "grafico.h"
+#include "traccia.h"
 #include <QList>
 
 class TracciatoMultiplo:public Grafico
 {
 private:
-    QList<TracciatoSingolo*> tracce;
+    QList<Traccia*> tracce;
     QList<QString> categorie;
     //modifica l'oggetto puntato dal parametro formale
-    void controlloCompatibilitaTracciato(TracciatoSingolo*) const;
+    void aggiustaDati(Traccia*);
+
 
 public:
     TracciatoMultiplo();
     void aggiungiCategoria(const QString&);
     void eliminaCategoria(const QString&);
-    QList<TracciatoSingolo*> getTracce() const;
-    TracciatoSingolo *getTracce(const QString&) const;
+    QList<Traccia*> getTracce() const;
+    Traccia *getTraccia(const QString&) const;
     QList<QString> getCategorie() const;
     QList<QString> getNomiTracciati() const;
-    void aggiungiTracciato(const QString&);
-    void aggiungiTracciato(TracciatoSingolo *);
+    void aggiungiTraccia(const QString&);
+    void aggiungiTraccia(Traccia *);
+
     void salva(QXmlStreamWriter&) const;
     TracciatoMultiplo *popola(const QDomElement&);
 

@@ -17,6 +17,8 @@ public:
 public slots:
     void carica(const QString &);
     void salva(const QString &);
+    void aggiorna(Grafico*,const QString&,const QString&,double);
+
 signals:
     void visualizzaGrafici(const QList<Grafico*> &);
 };

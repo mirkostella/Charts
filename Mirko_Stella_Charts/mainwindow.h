@@ -31,6 +31,9 @@ private:
     QListWidget* listaGrafici;
     VistaGrafico* graficoDaVisualizzare;
 
+signals:
+    void aggiorna(Grafico*,const QString&,const QString&,double);
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();

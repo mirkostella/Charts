@@ -21,8 +21,8 @@ Grafico *GestoreCaricamento::carica() const
  QString tipoGrafico=elementoTipo.text();
  std::cout<<tipoGrafico.toStdString();
  Grafico* g=nullptr;
- if(tipoGrafico=="grafico semplice"){
-     g=new TracciatoSingolo();
+ if(tipoGrafico=="tracciato"){
+     g=new TracciatoMultiplo();
      g->popola(elementoRadice);
  }
 return g;

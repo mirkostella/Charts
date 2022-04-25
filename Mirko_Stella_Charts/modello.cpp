@@ -9,35 +9,26 @@ Modello::Modello(){
     primoc->aggiungiCategoria("legno");
     primoc->aggiungiCategoria("marmo");
     primoc->setNome("primo a tracciato multiplo");
-    //aggiungere aggiungi tracciato passando il nome del tracciato
-    primoc->aggiungiTracciato("Mirko");
-    TracciatoSingolo* mirko=primoc->getTracce("Mirko");
+//    //aggiungere aggiungi tracciato passando il nome del tracciato
+    primoc->aggiungiTraccia("Mirko");
+    Traccia* mirko=primoc->getTraccia("Mirko");
     mirko->modificaCoordinata("legno",24);
 
-    primoc->aggiungiTracciato("Nadia");
-    primoc->aggiungiTracciato("Matteo");
-    primoc->aggiungiTracciato("Giulia");
-    primoc->aggiungiTracciato("Mariano");
+    primoc->aggiungiTraccia("Nadia");
+    primoc->aggiungiTraccia("Matteo");
+    primoc->aggiungiTraccia("Giulia");
+    primoc->aggiungiTraccia("Mariano");
     primoc->aggiungiCategoria("mais");
     primoc->aggiungiCategoria("carbone");
     primoc->aggiungiCategoria("acciaio");
     mirko->modificaCoordinata("carbone",12);
     mirko->modificaCoordinata("mais",87);
-    TracciatoSingolo* giulia=primoc->getTracce("Giulia");
+    Traccia* giulia=primoc->getTraccia("Giulia");
     giulia->modificaCoordinata("acciaio",45);
-    TracciatoSingolo* nadia=primoc->getTracce("Nadia");
+    Traccia* nadia=primoc->getTraccia("Nadia");
     nadia->modificaCoordinata("mais",33);
     giulia->aggiungiCategoria("oro");
     giulia->modificaCoordinata("argento",55);
-
-
-
-    //grafico a tracciato singolo
-    Grafico* secondo=new TracciatoSingolo();
-    listaGrafici.push_back(secondo);
-    TracciatoSingolo* secondoc=dynamic_cast<TracciatoSingolo*>(secondo);
-    secondoc->aggiungiCategoria("covid19");
-    secondoc->modificaCoordinata("covid19",20);
 }
 
 void Modello::caricaDaFile(const QString & path)
@@ -58,11 +49,7 @@ void Modello::caricaDaFile(const QString & path)
     while(!corrente.isNull()){
         Grafico* g=nullptr;
         QString tipo=corrente.firstChildElement("tipo").text();
-        if(tipo=="tracciato_singolo"){
-            g=new TracciatoSingolo();
-            g->popola(corrente);
-        }
-        if(tipo=="tracciato_multiplo"){
+        if(tipo=="tracciato"){
             g=new TracciatoMultiplo();
             g->popola(corrente);
         }
@@ -124,15 +111,10 @@ QList<Grafico*> Modello::getGrafici() const
     return listaGrafici;
 }
 
-void Modello::stampa() const
+void Modello::aggiornaValore(Grafico * g, const QString & t, const QString & c, double v)
 {
-    for(auto it=listaGrafici.cbegin();it!=listaGrafici.cend();++it){
-       if(dynamic_cast<TracciatoSingolo*>(*it))
-           cout<<*static_cast<TracciatoSingolo*>(*it);
-       if(dynamic_cast<TracciatoMultiplo*>(*it))
-           cout<<*static_cast<TracciatoMultiplo*>(*it);
-    }
+    TracciatoMultiplo* conv=dynamic_cast<TracciatoMultiplo*>(g);
+    Traccia* trac=conv->getTraccia(t);
+    trac->modificaCoordinata(c,v);
+
 }
-
-
-

@@ -19,9 +19,11 @@ SOURCES += \
     grafico.cpp \
     mainwindow.cpp \
     modello.cpp \
+    tablewidgetitem.cpp \
+    traccia.cpp \
     tracciatomultiplo.cpp \
-    tracciatosingolo.cpp \
     vistagrafico.cpp \
+    vistamodificagrafico.cpp \
     vistatracciatosingolo.cpp
 
 HEADERS += \
@@ -32,9 +34,11 @@ HEADERS += \
     listwidgetitem.h \
     mainwindow.h \
     modello.h \
+    tablewidgetitem.h \
+    traccia.h \
     tracciatomultiplo.h \
-    tracciatosingolo.h \
     vistagrafico.h \
+    vistamodificagrafico.h \
     vistatracciatosingolo.h
 
 

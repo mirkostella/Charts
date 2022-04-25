@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <radice>
     <grafico>
-        <tipo>tracciato_multiplo</tipo>
+        <tipo>tracciato</tipo>
         <nome>primo a tracciato multiplo</nome>
         <dati>
             <traccia>
-                <tipo>tracciato_singolo</tipo>
                 <nome>Mirko</nome>
                 <dati>
                     <dato>
@@ -28,10 +27,13 @@
                         <chiave>marmo</chiave>
                         <valore>0</valore>
                     </dato>
+                    <dato>
+                        <chiave>oro</chiave>
+                        <valore>0</valore>
+                    </dato>
                 </dati>
             </traccia>
             <traccia>
-                <tipo>tracciato_singolo</tipo>
                 <nome>Nadia</nome>
                 <dati>
                     <dato>
@@ -54,10 +56,13 @@
                         <chiave>marmo</chiave>
                         <valore>0</valore>
                     </dato>
+                    <dato>
+                        <chiave>oro</chiave>
+                        <valore>0</valore>
+                    </dato>
                 </dati>
             </traccia>
             <traccia>
-                <tipo>tracciato_singolo</tipo>
                 <nome>Matteo</nome>
                 <dati>
                     <dato>
@@ -80,15 +85,47 @@
                         <chiave>marmo</chiave>
                         <valore>0</valore>
                     </dato>
+                    <dato>
+                        <chiave>oro</chiave>
+                        <valore>17</valore>
+                    </dato>
                 </dati>
             </traccia>
             <traccia>
-                <tipo>tracciato_singolo</tipo>
                 <nome>Giulia</nome>
                 <dati>
                     <dato>
                         <chiave>acciaio</chiave>
                         <valore>45</valore>
+                    </dato>
+                    <dato>
+                        <chiave>carbone</chiave>
+                        <valore>0</valore>
+                    </dato>
+                    <dato>
+                        <chiave>legno</chiave>
+                        <valore>0</valore>
+                    </dato>
+                    <dato>
+                        <chiave>mais</chiave>
+                        <valore>0</valore>
+                    </dato>
+                    <dato>
+                        <chiave>marmo</chiave>
+                        <valore>13</valore>
+                    </dato>
+                    <dato>
+                        <chiave>oro</chiave>
+                        <valore>0</valore>
+                    </dato>
+                </dati>
+            </traccia>
+            <traccia>
+                <nome>Mariano</nome>
+                <dati>
+                    <dato>
+                        <chiave>acciaio</chiave>
+                        <valore>0</valore>
                     </dato>
                     <dato>
                         <chiave>carbone</chiave>
@@ -112,42 +149,6 @@
                     </dato>
                 </dati>
             </traccia>
-            <traccia>
-                <tipo>tracciato_singolo</tipo>
-                <nome>Mariano</nome>
-                <dati>
-                    <dato>
-                        <chiave>acciaio</chiave>
-                        <valore>0</valore>
-                    </dato>
-                    <dato>
-                        <chiave>carbone</chiave>
-                        <valore>0</valore>
-                    </dato>
-                    <dato>
-                        <chiave>legno</chiave>
-                        <valore>0</valore>
-                    </dato>
-                    <dato>
-                        <chiave>mais</chiave>
-                        <valore>0</valore>
-                    </dato>
-                    <dato>
-                        <chiave>marmo</chiave>
-                        <valore>0</valore>
-                    </dato>
-                </dati>
-            </traccia>
-        </dati>
-    </grafico>
-    <grafico>
-        <tipo>tracciato_singolo</tipo>
-        <nome>nome Default</nome>
-        <dati>
-            <dato>
-                <chiave>covid19</chiave>
-                <valore>20</valore>
-            </dato>
         </dati>
     </grafico>
 </radice>

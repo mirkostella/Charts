@@ -1,16 +1,22 @@
 #include "tracciatomultiplo.h"
 
-void TracciatoMultiplo::controlloCompatibilitaTracciato(TracciatoSingolo * nuovoTracciato) const
+void TracciatoMultiplo::aggiustaDati(Traccia * nuovaTraccia)
 {
-    QString nomeT=nuovoTracciato->getNome();
+    QString nomeT=nuovaTraccia->getNome();
     //nome grafico giá presente
     if(getNomiTracciati().contains(nomeT)){
         //eccezione nome giá presente
     }
-    //aggiusto le categorie del nuovo tracciato o di quelli giá presenti
+    QList<QString> categorieNuovaTraccia=nuovaTraccia->getCategorie();
+    //aggiungo le categorie mancanti alla nuova traccia
     for(auto it=categorie.cbegin();it!=categorie.cend();++it){
-        if(!nuovoTracciato->getCategorie().contains(*it))
-            nuovoTracciato->aggiungiCategoria(*it);
+        if(!nuovaTraccia->getCategorie().contains(*it))
+            nuovaTraccia->aggiungiCategoria(*it);
+    }
+    //aggiungo alle categorie le categorie della nuova traccia che non sono ancora presenti nel tracciato
+    for(auto it=categorieNuovaTraccia.cbegin();it!=categorieNuovaTraccia.cend();++it){
+        if(!categorie.contains(*it))
+            aggiungiCategoria(*it);
     }
 
 }
@@ -20,8 +26,7 @@ TracciatoMultiplo::TracciatoMultiplo()
 
 
 }
-//ATTENZIONE!! da sistemare!!!!! se non ci sono elementi in questo modo non inserisce la categoria..
-//fare un campo dati che contiene la lista delle categorie.
+
 void TracciatoMultiplo::aggiungiCategoria(const QString & c)
 { 
     if(!categorie.contains(c)){
@@ -44,16 +49,16 @@ void TracciatoMultiplo::eliminaCategoria(const QString & c)
         //categoria non presente
 }
 
-QList<TracciatoSingolo*> TracciatoMultiplo::getTracce() const
+QList<Traccia*> TracciatoMultiplo::getTracce() const
 {
     return tracce;
 }
 
 //se non trova la traccia ritorna null
-TracciatoSingolo* TracciatoMultiplo::getTracce(const QString & nomeTraccia) const
+Traccia* TracciatoMultiplo::getTraccia(const QString & nomeTraccia) const
 {
     bool trovato=false;
-    TracciatoSingolo * ris=nullptr;
+    Traccia * ris=nullptr;
     for(auto it=tracce.cbegin();it!=tracce.cend() && !trovato;++it)
         if((*it)->getNome()==nomeTraccia){
             ris=*it;
@@ -79,84 +84,55 @@ QList<QString> TracciatoMultiplo::getNomiTracciati() const
 }
 
 //aggiunge un tracciato vuoto
-void TracciatoMultiplo::aggiungiTracciato(const QString & nomeTracciato)
+void TracciatoMultiplo::aggiungiTraccia(const QString & nomeTraccia)
 {
-    TracciatoSingolo* nuovoTracciato=new TracciatoSingolo(nomeTracciato);
-    controlloCompatibilitaTracciato(nuovoTracciato);
-    tracce.push_back(nuovoTracciato);
+    Traccia* nuovaTraccia=new Traccia(nomeTraccia);
+    aggiustaDati(nuovaTraccia);
+    tracce.push_back(nuovaTraccia);
 }
 
-void TracciatoMultiplo::aggiungiTracciato(TracciatoSingolo * nuovoTracciato)
+void TracciatoMultiplo::aggiungiTraccia(Traccia * nuovaTraccia)
 {
-    controlloCompatibilitaTracciato(nuovoTracciato);
-    tracce.push_back(nuovoTracciato);
+    aggiustaDati(nuovaTraccia);
+    tracce.push_back(nuovaTraccia);
 }
 
 void TracciatoMultiplo::salva(QXmlStreamWriter & stream) const
 {
     if(stream.device()){
-        stream.writeTextElement("tipo","tracciato_multiplo");
+        stream.writeTextElement("tipo","tracciato");
         stream.writeTextElement("nome",getNome());
         stream.writeStartElement("dati");
-        //ciclo che scrive i dati presenti in traccia
+        //ciclo che scrive i dati presenti in tracce
         for(auto it=tracce.cbegin();it!=tracce.cend();++it){
-            stream.writeStartElement("traccia");
-            (*it)->salva(stream);
-            stream.writeEndElement();
+            (*it)->scriviSuStream(stream);
         }
         stream.writeEndElement();//fine dati
+        stream.writeEndElement();//fine tracciato
     }
     else{
         //lo stream non é associato a nessun file
     }
 }
 
+//popola con i dati contenuti all'interno del tag inizio
 TracciatoMultiplo *TracciatoMultiplo::popola(const QDomElement & inizio)
 {
     QDomElement elementoNome=inizio.firstChildElement("nome");
     setNome(elementoNome.text());
     QDomNodeList listaTracce=inizio.elementsByTagName("traccia");
     for(int i=0;i<listaTracce.count();++i){
-        TracciatoSingolo* nuovaTraccia=new TracciatoSingolo();
-        QDomElement elementoTraccia=listaTracce.item(i).toElement();
-        QDomElement nomeTraccia=elementoTraccia.firstChildElement("nome");
-        nuovaTraccia->setNome(nomeTraccia.text());
-        QDomNodeList listaNodoDati=elementoTraccia.elementsByTagName("dati");
-        QDomNode nodoDati=listaNodoDati.item(0);
-        QDomElement elementoDati=nodoDati.toElement();
-        QDomNodeList listaDati=elementoDati.elementsByTagName("dato");
-        //per ogni nodo
-        for(int i=0;i<listaDati.count();++i){
-            QDomElement elementoChiave=listaDati.item(i).firstChildElement("chiave");
-            QDomElement elementoValore=listaDati.item(i).firstChildElement("valore");
-            QString chiave=elementoChiave.text();
-            double valore=elementoValore.text().toDouble();
-            nuovaTraccia->aggiungiCategoria(chiave);
-            aggiungiCategoria(chiave);
-            nuovaTraccia->modificaCoordinata(chiave,valore);
-        }
-        tracce.append(nuovaTraccia);
+        Traccia* nuovaTraccia=new Traccia();
+        QDomElement elementoNuovaTraccia=listaTracce.at(i).toElement();
+        nuovaTraccia->popola(elementoNuovaTraccia);
+        aggiungiTraccia(nuovaTraccia);
     }
     return this;
 }
 
-std::ostream& operator<<(std::ostream& os,const TracciatoMultiplo& b){
-    QList<TracciatoSingolo*> tracce= b.getTracce();
-    for(auto it=tracce.cbegin();it!=tracce.cend();++it){
-        os<<"nome:";
-        os<<(*it)->getNome().toStdString();
-        os<<std::endl;
-        QMap<QString,double> t=(*it)->getTraccia();
-        for(auto i=t.cbegin();i!=t.cend();++i){
-            os<<"chiave:";
-            os<<i.key().toStdString();
-            os<<std::endl;
-            os<<"valore:";
-            os<<i.value();
-            os<<std::endl;
-            os<<std::endl;
-        }
-    }
 
-    return os;
-}
+
+
+
+
+

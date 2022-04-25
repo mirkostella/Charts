@@ -6,9 +6,11 @@ release/main.o
 release/grafico.o
 release/mainwindow.o
 release/modello.o
+release/tablewidgetitem.o
+release/traccia.o
 release/tracciatomultiplo.o
-release/tracciatosingolo.o
 release/vistagrafico.o
+release/vistamodificagrafico.o
 release/vistatracciatosingolo.o
 release/moc_controller.o
 release/moc_eccezionecaricamento.o

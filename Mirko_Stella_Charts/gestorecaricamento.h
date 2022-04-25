@@ -2,7 +2,7 @@
 #define GESTORECARICAMENTO_H
 
 //gerarchia
-#include "tracciatosingolo.h"
+#include "tracciatomultiplo.h"
 #include <iostream>
 #include <QXmlParseException>
 
