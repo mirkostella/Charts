@@ -6,6 +6,8 @@
 #include <QDomElement>
 #include <QMap>
 
+#include <iostream>
+
 class Traccia
 {
 private:
@@ -14,7 +16,7 @@ private:
 public:
     Traccia();
     Traccia(const QString &);
-    ~Traccia();
+    virtual ~Traccia();
 
     QMap<QString,double> getTraccia() const;
     QString getNome() const;

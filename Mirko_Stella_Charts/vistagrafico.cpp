@@ -31,26 +31,43 @@ void VistaGrafico::inizializzaVociMenuModifica()
 }
 
 VistaGrafico::VistaGrafico(QWidget * parent, Grafico * g):QMainWindow(parent),
-    grafico(g),layPrincipale(new QGridLayout),tabella(new QTableWidget()),areaGrafico(new QChartView)
+    grafico(g),layPrincipale(new QGridLayout),tabella(nullptr),wPulsanti(new QWidget()),areaGrafico(new QChartView(nullptr,nullptr))
 {
     QWidget* centrale=new QWidget();
     setCentralWidget(centrale);
     centrale->setLayout(layPrincipale);
     inizializzaVociMenuPrincipale();
-    layPrincipale->addWidget(tabella,0,0,Qt::AlignLeft);
-    layPrincipale->addWidget(areaGrafico,0,1);
-
 
     creaBarre();
     creaTabella();
+
     tabella->setHidden(true);
-    tabella->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    layPrincipale->addWidget(tabella,0,1);
+    layPrincipale->addWidget(areaGrafico,0,1);
+
+    QPushButton* pAggiungiCategoria=new QPushButton("Aggiungi Categoria");
+    QPushButton* pAggiungiTraccia=new QPushButton("Aggiungi Traccia");
+    QHBoxLayout* layPulsantiAggiungi=new QHBoxLayout();
+    layPulsantiAggiungi->addSpacing(50);
+    layPulsantiAggiungi->addWidget(pAggiungiCategoria);
+    layPulsantiAggiungi->addSpacing(50);
+    layPulsantiAggiungi->addWidget(pAggiungiTraccia);
+    layPulsantiAggiungi->addSpacing(50);
+    wPulsanti->setLayout(layPulsantiAggiungi);
+    wPulsanti->setHidden(true);
+    layPrincipale->addWidget(wPulsanti,1,1);
+
 
 
     //connessioni
-    connect(tabella,SIGNAL(itemDoubleClicked(QTableWidgetItem*)),this,SLOT(apriDialogoCella(QTableWidgetItem*)));
-    connect(tabella,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(aggiornaValore(QTableWidgetItem*)));
     connect(this,SIGNAL(valoreTabellaCambiato(Grafico*,QString,QString,double)),parentWidget(),SIGNAL(aggiorna(Grafico*,QString,QString,double)));
+
+
+
+//    connect(tabella,SIGNAL(itemClicked(QTableWidgetItem*)),this,SLOT(evidenziaCoordinate(QTableWidgetItem*)));
+      connect(pAggiungiCategoria,SIGNAL(clicked()),this,SLOT(aggiungiCategoria()));
+      connect(pAggiungiTraccia,SIGNAL(clicked()),this,SLOT(aggiungiTraccia()));
+
 }
 
 void VistaGrafico::aggiornaValore(QTableWidgetItem* i)
@@ -128,6 +145,7 @@ void VistaGrafico::mostraModifica()
     setMenuBar(menuModifica);
     inizializzaVociMenuModifica();
     tabella->setHidden(false);
+    wPulsanti->setHidden(false);
     areaGrafico->setHidden(true);
 }
 
@@ -137,24 +155,120 @@ void VistaGrafico::mostraPrincipale()
     setMenuBar(menuPrincipale);
     inizializzaVociMenuPrincipale();
     tabella->setHidden(true);
+    wPulsanti->setHidden(true);
     areaGrafico->setHidden(false);
-    QChart* chartAttuale=areaGrafico->chart();
-    chartAttuale->aggiorna();
+    aggiornaRappresentazione(static_cast<Chart*>(areaGrafico->chart()));
+}
+
+void VistaGrafico::eliminaTraccia(int indice)
+{
+    QTableWidgetItem* cellaHeader=tabella->horizontalHeaderItem(indice);
+    QMessageBox messaggio;
+    messaggio.setIcon(QMessageBox::Question);
+    QString nomeTraccia=cellaHeader->text();
+    QString testoMessaggio="Eliminare la traccia "+nomeTraccia+"?";
+    messaggio.setText(testoMessaggio);
+    QPushButton *pulsanteElimina = messaggio.addButton(tr("Elimina"), QMessageBox::YesRole);
+    QPushButton *pulsanteAnnulla = messaggio.addButton(tr("Annulla"), QMessageBox::RejectRole);
+
+    messaggio.exec();
+
+    if (messaggio.clickedButton() == pulsanteElimina){
+        TracciatoMultiplo* tracc= static_cast<TracciatoMultiplo*>(grafico);
+        tracc->eliminaTraccia(nomeTraccia);
+        tabella->removeColumn(indice);
+        tabella->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    }
+}
+
+void VistaGrafico::eliminaCategoria(int indice)
+{
+    QTableWidgetItem* cellaHeader=tabella->verticalHeaderItem(indice);
+    QMessageBox messaggio;
+    messaggio.setIcon(QMessageBox::Question);
+    QString nomeCategoria=cellaHeader->text();
+    QString testoMessaggio="Eliminare la categoria "+nomeCategoria+"?";
+    messaggio.setText(testoMessaggio);
+    QPushButton *pulsanteElimina = messaggio.addButton(tr("Elimina"), QMessageBox::YesRole);
+    QPushButton *pulsanteAnnulla = messaggio.addButton(tr("Annulla"), QMessageBox::RejectRole);
+
+    messaggio.exec();
+
+    if (messaggio.clickedButton() == pulsanteElimina){
+        TracciatoMultiplo* tracc= static_cast<TracciatoMultiplo*>(grafico);
+        tracc->eliminaCategoria(nomeCategoria);
+        tabella->removeRow(indice);
+        tabella->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    }
+}
+
+void VistaGrafico::aggiungiTraccia()
+{
+    bool ok=false;
+    QString nuovaTraccia=QInputDialog::getText(this,"Nuova Traccia","Nome Traccia",QLineEdit::Normal,"",&ok);
+
+    if(ok && nuovaTraccia!=""){
+        TracciatoMultiplo* tracc=static_cast<TracciatoMultiplo*>(grafico);
+        tracc->aggiungiTraccia(nuovaTraccia);
+        creaTabella();
+    }
 
 }
+
+void VistaGrafico::aggiungiCategoria()
+{
+    bool ok=false;
+    QString nuovaCategoria=QInputDialog::getText(this,"Nuova Categoria","Nome Categoria",QLineEdit::Normal,QString(),&ok);
+    if(ok && nuovaCategoria!=""){
+        TracciatoMultiplo* tracc=static_cast<TracciatoMultiplo*>(grafico);
+        tracc->aggiungiCategoria(nuovaCategoria);
+        creaTabella();
+    }
+}
+
+//void VistaGrafico::evidenziaCoordinate(QTableWidgetItem * oggetto)
+//{
+//    QColor* colore=new QColor("red");
+//    int riga=tabella->currentRow();
+//    tabella->verticalHeaderItem(riga)->setBackgroundColor(*colore);
+
+
+
+
+//}
 void VistaGrafico::creaTabella()
 {
-    //crea la tabella
+    QTableWidget* tabellaPrec=tabella;
+    tabella=new QTableWidget();
+    layPrincipale->addWidget(tabella,0,1);
+    if(tabellaPrec)
+        delete tabellaPrec;
+
+//    tabella->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+    tabella->verticalHeader()->setSectionResizeMode(QHeaderView::Custom);
+    tabella->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+
+    tabella->horizontalHeader()->setMinimumSectionSize(70);
+    tabella->horizontalHeader()->setSectionsClickable(true);
+
+    tabella->verticalHeader()->setDefaultAlignment(Qt::AlignCenter);
+    tabella->verticalHeader()->setMinimumSectionSize(30);
+    tabella->verticalHeader()->setMaximumWidth(100);
+    tabella->verticalHeader()->setSectionsClickable(true);
     TracciatoMultiplo* gr=dynamic_cast<TracciatoMultiplo*>(grafico);
     QList<Traccia*> listaTracce= gr->getTracce();
     QList<QString> listaCategorie= gr->getCategorie();
+    tabella->verticalHeader()->setSortIndicator(4,Qt::SortOrder::AscendingOrder);
+
     tabella->setColumnCount(listaTracce.count());
     tabella->setRowCount(listaCategorie.count());
-    tabella->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
     int y=0;
     for(auto i=listaCategorie.cbegin();i!=listaCategorie.cend();++i){
         QTableWidgetItem* oggetto=new QTableWidgetItem(*i);
-        oggetto->setTextAlignment(Qt::AlignCenter);
+        if(i->length()>15){
+            oggetto->setTextAlignment(Qt::AlignLeft);
+        }
         tabella->setVerticalHeaderItem(y,oggetto);
         y++;
     }
@@ -178,100 +292,39 @@ void VistaGrafico::creaTabella()
         x=0;
         y++;
         }
+
+    //connessioni
+    connect(tabella,SIGNAL(itemDoubleClicked(QTableWidgetItem*)),this,SLOT(apriDialogoCella(QTableWidgetItem*)));
+    connect(tabella,SIGNAL(itemChanged(QTableWidgetItem*)),this,SLOT(aggiornaValore(QTableWidgetItem*)));
+    connect(tabella->horizontalHeader(),SIGNAL(sectionDoubleClicked(int)),this,SLOT(eliminaTraccia(int)));
+    connect(tabella->verticalHeader(),SIGNAL(sectionDoubleClicked(int)),this,SLOT(eliminaCategoria(int)));
 }
 
 
 void VistaGrafico::creaBarre()
 {
-//    delete areaGrafico->chart();
-    TracciatoMultiplo* g=dynamic_cast<TracciatoMultiplo*>(grafico);
-    QList<Traccia*> listaTracce= g->getTracce();
-    QList<QString> listaCategorie= g->getCategorie();
-    QStringList categories;
+       QChart* chartPrecedente=areaGrafico->chart();
+       ChartBarre* nuovoBarre=new ChartBarre(grafico);
+       areaGrafico->setChart(nuovoBarre);
+       delete chartPrecedente;
+       nuovoBarre->legend()->setVisible(true);
+       nuovoBarre->legend()->setAlignment(Qt::AlignBottom);
+       areaGrafico->setRenderHint(QPainter::Antialiasing);
+}
 
-    for(auto i=listaCategorie.cbegin();i!=listaCategorie.cend();++i)
-        categories<<*i;
-
-    QBarSeries *series = new QBarSeries();
-    if(!listaTracce.isEmpty()){
-    for(auto it=listaTracce.cbegin();it!=listaTracce.cend();++it){
-        QBarSet *set = new QBarSet((**it).getNome());
-        for(auto i=listaCategorie.cbegin();i!=listaCategorie.cend();++i){
-            *set<<(*it)->getTraccia()[*i];
-        }
-        series->append(set);
-    }
-    }
-    else{
-        QBarSet *set = new QBarSet("");
-        *set<<1;
-        series->append(set);
-    }
-
-
-          QChart *chart = new QChart();
-             chart->addSeries(series);
-             chart->setTitle("Simple barchart example");
-             chart->setAnimationOptions(QChart::SeriesAnimations);
-
-
-                QBarCategoryAxis *axisX = new QBarCategoryAxis();
-                axisX->append(categories);
-                chart->addAxis(axisX, Qt::AlignBottom);
-                series->attachAxis(axisX);
-
-                QValueAxis *axisY = new QValueAxis();
-                chart->addAxis(axisY, Qt::AlignLeft);
-                series->attachAxis(axisY);
-
-                chart->legend()->setVisible(true);
-                   chart->legend()->setAlignment(Qt::AlignBottom);
-                   areaGrafico->setChart(chart);
-                   areaGrafico->setRenderHint(QPainter::Antialiasing);
+void VistaGrafico::aggiornaRappresentazione(Chart* c)
+{
+    c->aggiornaChart(grafico);
 }
 
 void VistaGrafico::creaSpezzata()
 {
-//    delete areaGrafico->chart();
-    QChart *chart = new QChart();
-    QLineSeries* series = new QLineSeries();
-    series->setName("bilancio");
-    series->setPointsVisible();
-    series->setPointLabelsVisible();
-
-
-    series->append(1,6.11);
-    series->append(2,4.6);
-    series->append(3,3);
-    series->append(4,9.4);
-    chart->addSeries(series);
-
-    QLineSeries* series2 = new QLineSeries();
-    series2->setName("perdite");
-    QColor colore("red");
-    series2->setColor(colore);
-    series2->setPointsVisible();
-    series2->setPointLabelsVisible();
-
-
-    series2->append(0,7);
-    series2->append(1,9.7);
-    series2->append(2,2);
-    series2->append(3,1);
-    series2->append(4,5);
-    chart->addSeries(series2);
-
-    QCategoryAxis *axisX = new QCategoryAxis();
-    axisX->append("Gennaio",1);
-    axisX->append("Febbraio",2);
-    axisX->append("Marzo",3);
-    chart->addAxis(axisX, Qt::AlignBottom);
-    series->attachAxis(axisX);
-
-    QValueAxis *axisY = new QValueAxis();
-    chart->addAxis(axisY, Qt::AlignLeft);
-    series->attachAxis(axisY);
-    areaGrafico->setChart(chart);
+    QChart* chartPrecedente=areaGrafico->chart();
+    ChartSpezzata* nuovoSpezzata=new ChartSpezzata(grafico);
+    areaGrafico->setChart(nuovoSpezzata);
+    delete chartPrecedente;
+    nuovoSpezzata->legend()->setVisible(true);
+    nuovoSpezzata->legend()->setAlignment(Qt::AlignBottom);
     areaGrafico->setRenderHint(QPainter::Antialiasing);
 }
 

@@ -27,10 +27,6 @@
                         <chiave>marmo</chiave>
                         <valore>0</valore>
                     </dato>
-                    <dato>
-                        <chiave>oro</chiave>
-                        <valore>0</valore>
-                    </dato>
                 </dati>
             </traccia>
             <traccia>
@@ -54,10 +50,6 @@
                     </dato>
                     <dato>
                         <chiave>marmo</chiave>
-                        <valore>0</valore>
-                    </dato>
-                    <dato>
-                        <chiave>oro</chiave>
                         <valore>0</valore>
                     </dato>
                 </dati>
@@ -85,10 +77,6 @@
                         <chiave>marmo</chiave>
                         <valore>0</valore>
                     </dato>
-                    <dato>
-                        <chiave>oro</chiave>
-                        <valore>17</valore>
-                    </dato>
                 </dati>
             </traccia>
             <traccia>
@@ -112,7 +100,7 @@
                     </dato>
                     <dato>
                         <chiave>marmo</chiave>
-                        <valore>13</valore>
+                        <valore>0</valore>
                     </dato>
                     <dato>
                         <chiave>oro</chiave>
@@ -141,10 +129,6 @@
                     </dato>
                     <dato>
                         <chiave>marmo</chiave>
-                        <valore>0</valore>
-                    </dato>
-                    <dato>
-                        <chiave>oro</chiave>
                         <valore>0</valore>
                     </dato>
                 </dati>

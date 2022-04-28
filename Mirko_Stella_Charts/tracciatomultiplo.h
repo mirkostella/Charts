@@ -18,6 +18,8 @@ public:
     TracciatoMultiplo();
     void aggiungiCategoria(const QString&);
     void eliminaCategoria(const QString&);
+    void eliminaTraccia(Traccia* const);
+    void eliminaTraccia(const QString&);
     QList<Traccia*> getTracce() const;
     Traccia *getTraccia(const QString&) const;
     QList<QString> getCategorie() const;

@@ -1,3 +1,6 @@
+debug/chart.o
+debug/chartbarre.o
+debug/chartspezzata.o
 debug/controller.o
 debug/eccezionecaricamento.o
 debug/gestorecaricamento.o
@@ -10,7 +13,6 @@ debug/tablewidgetitem.o
 debug/traccia.o
 debug/tracciatomultiplo.o
 debug/vistagrafico.o
-debug/vistamodificagrafico.o
 debug/vistatracciatosingolo.o
 debug/moc_controller.o
 debug/moc_eccezionecaricamento.o

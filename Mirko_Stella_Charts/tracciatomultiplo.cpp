@@ -46,7 +46,20 @@ void TracciatoMultiplo::eliminaCategoria(const QString & c)
             (*it)->eliminaCoordinata(c);
     }
     //else
-        //categoria non presente
+    //categoria non presente
+}
+
+void TracciatoMultiplo::eliminaTraccia(Traccia * const t)
+{
+    tracce.removeOne(t);
+    delete t;
+}
+
+void TracciatoMultiplo::eliminaTraccia(const QString & nomeTraccia)
+{
+    Traccia* t=getTraccia(nomeTraccia);
+    tracce.removeOne(t);
+    delete t;
 }
 
 QList<Traccia*> TracciatoMultiplo::getTracce() const

@@ -9,7 +9,7 @@ Traccia::Traccia(const QString & n):nome(n)
 
 Traccia::~Traccia()
 {
-
+    std::cout<<"la traccia é stata distrutta";
 }
 
 QMap<QString,double> Traccia::getTraccia() const

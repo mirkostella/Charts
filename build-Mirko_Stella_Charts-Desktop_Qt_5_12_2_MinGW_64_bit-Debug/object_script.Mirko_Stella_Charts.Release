@@ -1,3 +1,6 @@
+release/chart.o
+release/chartbarre.o
+release/chartspezzata.o
 release/controller.o
 release/eccezionecaricamento.o
 release/gestorecaricamento.o
@@ -10,7 +13,6 @@ release/tablewidgetitem.o
 release/traccia.o
 release/tracciatomultiplo.o
 release/vistagrafico.o
-release/vistamodificagrafico.o
 release/vistatracciatosingolo.o
 release/moc_controller.o
 release/moc_eccezionecaricamento.o
